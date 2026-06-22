@@ -1,0 +1,911 @@
+## All 6 Programs — Steps Only
+
+---
+
+## Program 2: Maven Project
+
+**Setup:**
+```
+cd desktop
+mkdir MAVENPROJECT
+cd MAVENPROJECT
+mvn archetype:generate -DgroupId=com.example -DartifactId=myapp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd myapp
+```
+
+**Edit pom.xml:**
+```
+notepad pom.xml
+```
+Paste:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+  http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>myapp</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
+```
+CTRL+S → close notepad
+
+**Edit App.java:**
+```
+notepad src\main\java\com\example\App.java
+```
+Paste:
+```java
+package com.example;
+public class App {
+    public int add(int a, int b) {
+        return a + b;
+    }
+    public static void main(String[] args) {
+        App app = new App();
+        int result = app.add(2, 3);
+        System.out.println("2 + 3 = " + result);
+        System.out.println("Application executed successfully!");
+    }
+}
+```
+CTRL+S → close notepad
+
+**Edit AppTest.java:**
+```
+notepad src\test\java\com\example\AppTest.java
+```
+Paste:
+```java
+package com.example;
+import org.junit.Assert;
+import org.junit.Test;
+public class AppTest {
+    @Test
+    public void testAdd() {
+        App app = new App();
+        int result = app.add(2, 3);
+        System.out.println("Running test: 2 + 3 = " + result);
+        Assert.assertEquals(5, result);
+    }
+}
+```
+CTRL+S → close notepad
+
+**Build and Run:**
+```
+mvn compile
+mvn test
+mvn package
+java -cp target/myapp-1.0-SNAPSHOT.jar com.example.App
+```
+
+**Expected Output:**
+```
+2 + 3 = 5
+Application executed successfully!
+```
+
+---
+
+## Program 3: Gradle Project
+
+### PART A — Kotlin DSL
+
+**Setup:**
+```
+cd desktop
+mkdir GRADLEPROJECTNEW
+cd GRADLEPROJECTNEW
+gradle init --type java-application
+```
+Answer questions:
+```
+Java version: 17
+Project name: kotlinProject
+Application structure: 1
+Build script DSL: 1 (Kotlin)
+Test framework: 1 (JUnit 4)
+New APIs: no
+```
+
+**Edit build.gradle.kts:**
+```
+notepad app\build.gradle.kts
+```
+Paste:
+```kotlin
+plugins {
+    kotlin("jvm") version "1.8.21"
+    application
+}
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation(kotlin("stdlib"))
+    testImplementation("junit:junit:4.13.2")
+}
+application {
+    mainClass.set("com.example.MainKt")
+}
+tasks.test {
+    useJUnit()
+    testLogging {
+        events("passed", "failed", "skipped")
+    }
+    outputs.upToDateWhen { false }
+}
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+```
+CTRL+S → close notepad
+
+**Rename and Edit Main.kt:**
+```
+cd app\src\main\java\org\example
+rename App.java Main.kt
+notepad Main.kt
+```
+Paste:
+```kotlin
+package com.example
+fun addNumbers(num1: Double, num2: Double): Double {
+    return num1 + num2
+}
+fun main() {
+    val num1 = 10.0
+    val num2 = 5.0
+    val result = addNumbers(num1, num2)
+    println("The sum of $num1 and $num2 is: $result")
+}
+```
+CTRL+S → close notepad
+
+**Rename and Edit MainTest.kt:**
+```
+cd C:\Users\YourName\Desktop\GRADLEPROJECTNEW
+cd app\src\test\java\org\example
+rename AppTest.java MainTest.kt
+notepad MainTest.kt
+```
+Paste:
+```kotlin
+package com.example
+import org.junit.Assert.*
+import org.junit.Test
+class MainTest {
+    @Test
+    fun testAddNumbers() {
+        val num1 = 10.0
+        val num2 = 5.0
+        val result = addNumbers(num1, num2)
+        assertEquals("Sum should be 15.0", 15.0, result, 0.001)
+    }
+}
+```
+CTRL+S → close notepad
+
+**Build and Run:**
+```
+cd C:\Users\YourName\Desktop\GRADLEPROJECTNEW
+gradle build
+gradle run
+gradle test
+```
+
+**Expected Output:**
+```
+The sum of 10.0 and 5.0 is: 15.0
+```
+
+---
+
+### PART B — Groovy DSL
+
+**Setup:**
+```
+cd desktop
+mkdir gr1
+cd gr1
+gradle init --type java-application
+```
+Answer questions:
+```
+Java version: 17
+Project name: gr1
+Application structure: 1
+Build script DSL: 2 (Groovy)
+Test framework: 1 (JUnit 4)
+New APIs: no
+```
+
+**Edit build.gradle:**
+```
+notepad app\build.gradle
+```
+Paste:
+```groovy
+plugins {
+    id 'application'
+}
+application {
+    mainClass = 'com.example.AdditionOperation'
+}
+repositories {
+    mavenCentral()
+}
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}
+test {
+    outputs.upToDateWhen { false }
+    testLogging {
+        events "passed", "failed", "skipped"
+        exceptionFormat "full"
+        showStandardStreams = true
+    }
+}
+```
+CTRL+S → close notepad
+
+**Rename and Edit AdditionOperation.java:**
+```
+cd app\src\main\java\org\example
+rename App.java AdditionOperation.java
+notepad AdditionOperation.java
+```
+Paste:
+```java
+package org.example;
+public class AdditionOperation {
+    public static void main(String[] args) {
+        double num1 = 5;
+        double num2 = 10;
+        double sum = num1 + num2;
+        System.out.printf("The sum of %.2f and %.2f is %.2f%n",
+            num1, num2, sum);
+    }
+}
+```
+CTRL+S → close notepad
+
+**Rename and Edit AdditionOperationTest.java:**
+```
+cd C:\Users\YourName\Desktop\gr1
+cd app\src\test\java\org\example
+rename AppTest.java AdditionOperationTest.java
+notepad AdditionOperationTest.java
+```
+Paste:
+```java
+package org.example;
+import org.junit.Test;
+import static org.junit.Assert.*;
+public class AdditionOperationTest {
+    @Test
+    public void testAddition() {
+        double num1 = 5;
+        double num2 = 10;
+        double expectedSum = num1 + num2;
+        double actualSum = num1 + num2;
+        assertEquals(expectedSum, actualSum, 0.01);
+    }
+}
+```
+CTRL+S → close notepad
+
+**Build and Run:**
+```
+cd C:\Users\YourName\Desktop\gr1
+gradle build
+gradle run
+gradle test
+```
+
+**Expected Output:**
+```
+The sum of 5.00 and 10.00 is 15.00
+```
+
+---
+
+## Program 4: Maven to Gradle Migration
+
+### PART A — Create Maven Project
+
+**Setup:**
+```
+cd desktop
+mkdir MAVENTOGRADLEPROJECT
+cd MAVENTOGRADLEPROJECT
+mvn archetype:generate -DgroupId=com.example -DartifactId=maven-example -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd maven-example
+```
+
+**Edit pom.xml:**
+```
+notepad pom.xml
+```
+Paste:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+  http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>maven-example</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+```
+CTRL+S → close notepad
+
+**Edit App.java:**
+```
+notepad src\main\java\com\example\App.java
+```
+Paste:
+```java
+package com.example;
+public class App {
+    public static void main(String[] args) {
+        System.out.println("Hello, Maven");
+        System.out.println("This is the simple realworld example....");
+        int a = 5;
+        int b = 10;
+        System.out.println("Sum of " + a + " and " + b
+            + " is " + sum(a, b));
+    }
+    public static int sum(int x, int y) {
+        return x + y;
+    }
+}
+```
+CTRL+S → close notepad
+
+**Build and Run with Maven:**
+```
+mvn compile
+mvn test
+mvn package
+java -cp target/maven-example-1.0-SNAPSHOT.jar com.example.App
+```
+
+**Expected Output:**
+```
+Hello, Maven
+This is the simple realworld example....
+Sum of 5 and 10 is 15
+```
+
+---
+
+### PART B — Migrate to Gradle
+
+**Stay in same maven-example folder and run:**
+```
+gradle init
+```
+Answer questions:
+```
+Found a Maven build. Generate Gradle build? yes
+Build script DSL: 2 (Groovy)
+New APIs: no
+```
+
+**Edit build.gradle:**
+```
+notepad build.gradle
+```
+Paste:
+```groovy
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'application'
+}
+repositories {
+    mavenLocal()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+dependencies {
+    testImplementation 'junit:junit:4.12'
+}
+application {
+    mainClass = 'com.example.App'
+}
+group = 'com.example'
+version = '1.0-SNAPSHOT'
+description = 'myapp'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+```
+CTRL+S → close notepad
+
+**Build and Run with Gradle:**
+```
+gradle build
+gradle test
+gradle run
+```
+
+**Expected Output (same as Maven):**
+```
+Hello, Maven
+This is the simple realworld example....
+Sum of 5 and 10 is 15
+```
+
+---
+
+## Program 6: Jenkins CI Pipeline
+
+### PART A — Push Maven Project to GitHub
+
+**Open Git Bash, navigate to maven-example folder:**
+```
+cd desktop
+cd MAVENTOGRADLEPROJECT
+cd maven-example
+```
+
+**Make sure pom.xml has maven-jar-plugin (open and verify or paste this):**
+```
+notepad pom.xml
+```
+Paste:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+  http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>maven-example</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.0.2</version>
+          <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.2.2</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addClasspath>true</addClasspath>
+                <mainClass>com.example.App</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
+```
+CTRL+S → close notepad
+
+**Push to GitHub (in Git Bash):**
+```
+git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/yourusername/SAMPLEJENKINSPROJECT.git
+git push -u origin main
+```
+Enter GitHub username and Personal Access Token when asked.
+
+---
+
+### PART B — Configure Jenkins
+
+**In browser go to `http://localhost:8080` and login.**
+
+**Install Plugin:**
+1. Manage Jenkins → Plugins → Available plugins
+2. Search: `maven integration`
+3. Check Pipeline Maven Integration → Install
+
+**Configure Maven:**
+1. Manage Jenkins → Tools
+2. Find Maven installations → Add Maven
+3. Name: `maven` → Save
+
+**Create New Job:**
+1. New Item
+2. Name: `JENKINSPROJECT`
+3. Select: Freestyle project
+4. Click OK
+
+**Configure Source Code Management:**
+1. Click Source Code Management
+2. Select Git
+3. Repository URL: `https://github.com/yourusername/SAMPLEJENKINSPROJECT.git`
+4. Credentials → Add → Jenkins
+   - Kind: Username with password
+   - Username: your GitHub username
+   - Password: your Personal Access Token
+   - Click Add
+5. Select the credentials you just added
+6. Branch: `*/main`
+
+**Configure Triggers:**
+1. Check Poll SCM
+2. Schedule: `H/5 * * * *`
+
+**Configure Build Steps:**
+1. Add build step → Invoke top-level Maven targets
+   - Maven Version: maven
+   - Goals: `clean compile test package`
+2. Add build step → Execute Windows batch command
+   - Command: `java -cp target/maven-example-1.0-SNAPSHOT.jar com.example.App`
+
+**Click Save**
+
+**Run Build:**
+1. Click Build Now
+2. Click build number → Console Output
+3. Scroll to bottom
+
+**Expected Console Output:**
+```
+Hello, Maven
+This is the simple realworld example....
+Sum of 5 and 10 is 15
+Finished: SUCCESS
+```
+
+---
+
+## Program 7: Ansible
+
+### PART A — Install WSL and Ubuntu
+
+**In Windows search bar:**
+```
+Windows features on or off
+→ Check: Windows Subsystem for Linux
+→ Click OK
+→ Click Restart now
+```
+
+**After restart, open CMD as Administrator:**
+```
+wsl --list --online
+wsl --install --distribution Ubuntu-24.04
+```
+
+**After installation:**
+```
+wsl
+```
+```
+Create username: itishree (or your name)
+New password: (type password - nothing shows, that is normal)
+Retype password:
+```
+
+---
+
+### PART B — Install Ansible
+
+**Inside Ubuntu terminal:**
+```
+sudo apt update
+sudo apt install ansible -y
+ansible --version
+```
+
+---
+
+### PART C — Create Project and Files
+
+```
+mkdir ansible-localhost
+cd ansible-localhost
+```
+
+**Create inventory file:**
+```
+nano hosts.ini
+```
+Type:
+```
+[local]
+localhost ansible_connection=local
+```
+CTRL+O → Enter → CTRL+X
+
+**Test connection:**
+```
+ansible -i hosts.ini all -m ping
+```
+Should see: `SUCCESS` and `"ping": "pong"`
+
+**Create HTML file:**
+```
+nano index.html
+```
+Type:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Custom Nginx Page</title>
+</head>
+<body>
+    <h1>Hello from Ansible!</h1>
+    <p>This is a custom web page deployed using Ansible!</p>
+</body>
+</html>
+```
+CTRL+O → Enter → CTRL+X
+
+**Create playbook:**
+```
+nano ansible.yml
+```
+Type:
+```yaml
+---
+- name: Install and run nginx on localhost
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+    - name: Copy custom index.html
+      copy:
+        src: index.html
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+    - name: Start nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+```
+CTRL+O → Enter → CTRL+X
+
+**Verify files exist:**
+```
+ls
+```
+Should see: `ansible.yml  hosts.ini  index.html`
+
+**Run playbook:**
+```
+ansible-playbook -i hosts.ini ansible.yml
+```
+Enter password when asked.
+Should see: `failed=0`
+
+**Verify in browser:**
+Open `http://localhost`
+Should see: **Hello from Ansible!**
+
+---
+
+## Program 8: Jenkins + Ansible
+
+### PART A — Prepare Maven Project
+
+**In Windows CMD, go to maven-example:**
+```
+cd desktop\MAVENTOGRADLEPROJECT\maven-example
+```
+
+**Verify pom.xml has maven-jar-plugin** (same pom.xml as Program 6 above — paste it again if needed)
+
+**Test locally:**
+```
+mvn clean compile test package
+java -cp target/maven-example-1.0-SNAPSHOT.jar com.example.App
+```
+Should see correct output.
+
+---
+
+### PART B — Push to GitHub
+
+**In Git Bash:**
+```
+cd desktop\MAVENTOGRADLEPROJECT\maven-example
+git add pom.xml
+git commit -m "Add main-class to manifest"
+git push origin main
+```
+
+---
+
+### PART C — Jenkins Build
+
+**In browser `http://localhost:8080`:**
+
+1. Open JENKINSPROJECT (already created in Program 6)
+2. Click Configure
+3. Verify build steps are correct:
+   - Maven goals: `clean compile test package`
+   - Batch command: `java -cp target/maven-example-1.0-SNAPSHOT.jar com.example.App`
+4. Click Save
+5. Click Build Now
+6. Verify Console Output shows SUCCESS
+
+**JAR file is now created at:**
+```
+C:\ProgramData\Jenkins\.jenkins\workspace\JENKINSPROJECT\target\maven-example-1.0-SNAPSHOT.jar
+```
+
+---
+
+### PART D — Ansible Deploy
+
+**Open WSL Ubuntu terminal:**
+```
+wsl
+```
+
+**Install Java in WSL:**
+```
+sudo apt update
+sudo apt install ansible -y
+sudo apt install default-jdk -y
+java --version
+```
+
+**Create deploy folder:**
+```
+mkdir ansible-deploy
+cd ansible-deploy
+```
+
+**Verify JAR file is accessible from WSL:**
+```
+ls /mnt/c/ProgramData/Jenkins/.jenkins/workspace/JENKINSPROJECT/target/
+```
+Should see: `maven-example-1.0-SNAPSHOT.jar`
+
+**Create inventory file:**
+```
+nano inventory.ini
+```
+Type:
+```
+[local]
+localhost ansible_connection=local
+```
+CTRL+O → Enter → CTRL+X
+
+**Create deploy playbook:**
+```
+nano deploy.yml
+```
+Type:
+```yaml
+---
+- name: Deploy JAR from Jenkins using Ansible
+  hosts: local
+  become: true
+  tasks:
+    - name: Copy JAR from Jenkins workspace
+      copy:
+        src: /mnt/c/ProgramData/Jenkins/.jenkins/workspace/JENKINSPROJECT/target/maven-example-1.0-SNAPSHOT.jar
+        dest: /home/itishree/ansible-deploy/maven-example-1.0-SNAPSHOT.jar
+        mode: '0755'
+    - name: Run JAR in Background
+      shell: nohup java -jar /home/itishree/ansible-deploy/maven-example-1.0-SNAPSHOT.jar > app.log 2>&1 &
+```
+CTRL+O → Enter → CTRL+X
+
+**Verify files:**
+```
+ls
+```
+Should see: `deploy.yml  inventory.ini`
+
+**Run playbook:**
+```
+ansible-playbook -i inventory.ini deploy.yml --ask-become-pass
+```
+Enter password when asked.
+Should see: `failed=0`
+
+**Check output:**
+```
+cat app.log
+```
+
+**Expected Output:**
+```
+Hello, Maven
+This is the simple realworld example....
+Sum of 5 and 10 is 15
+```
+
+---
+
+## Quick Reference — All Commands at a Glance
+
+| Program | Key Commands |
+|---|---|
+| 2 Maven | `mvn compile` → `mvn test` → `mvn package` → `java -cp target/...jar com.example.App` |
+| 3 Gradle Kotlin | `gradle init` → edit build.gradle.kts → `gradle build` → `gradle run` → `gradle test` |
+| 3 Gradle Groovy | `gradle init` → edit build.gradle → `gradle build` → `gradle run` → `gradle test` |
+| 4 Migration | Maven steps → `gradle init` → edit build.gradle → `gradle build` → `gradle run` |
+| 6 Jenkins | git push → Jenkins: New Item → Git URL → Poll SCM → Maven goals → Build Now |
+| 7 Ansible | WSL install → `sudo apt install ansible` → nano hosts.ini → nano ansible.yml → `ansible-playbook` |
+| 8 Jenkins+Ansible | Program 6 steps → WSL: `sudo apt install default-jdk` → nano deploy.yml → `ansible-playbook` → `cat app.log` |
